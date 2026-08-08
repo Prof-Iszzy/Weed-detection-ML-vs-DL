@@ -1,0 +1,30 @@
+# Classical ML baseline config — Person B
+# Phase 4 of project_execution_algorithm.md
+
+model:
+  type: random_forest        # or: svm
+  # TODO Phase 4: fill in after hyperparameter search
+  hyperparameters:
+    n_estimators: null       # search space: [100, 300, 500, 800]
+    max_depth: null          # search space: [10, 20, 30, null]
+    min_samples_split: null  # search space: [2, 5, 10]
+
+features:
+  color_indices: [ExG, ExGR]
+  texture: GLCM
+  shape: HOG
+  dimensionality_reduction: pca   # or: null, feature_selection
+
+data:
+  dataset: deepweeds
+  path: data/deepweeds
+  splits: [0.70, 0.15, 0.15]   # train / val / test
+  stratify: true
+  random_seed: 42
+
+training:
+  cv_folds: 5
+  search_strategy: grid_search   # or: random_search, bayesian_opt
+
+output:
+  results_table: results/tables/classical_ml_results.csv

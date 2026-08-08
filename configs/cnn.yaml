@@ -1,0 +1,33 @@
+# CNN baseline config — Person B
+# Phase 5 of project_execution_algorithm.md
+
+model:
+  type: resnet50              # or: efficientnet_b0
+  pretrained: true
+  freeze_backbone_epochs: 5   # unfreeze after N warmup epochs
+  hyperparameters:
+    learning_rate: null       # search space: [1e-3, 1e-4, 1e-5]
+    batch_size: null          # search space: [16, 32, 64]
+    optimizer: null           # search space: [adam, sgd]
+
+data:
+  dataset: deepweeds
+  path: data/deepweeds
+  splits: [0.70, 0.15, 0.15]
+  stratify: true
+  random_seed: 42
+  image_size: 224
+  augmentation:
+    horizontal_flip: true
+    rotation_degrees: 15
+    color_jitter: true
+
+training:
+  cv_folds: 5
+  max_epochs: 50
+  early_stopping_patience: 7
+  search_strategy: random_search
+
+output:
+  results_table: results/tables/cnn_results.csv
+  checkpoint_dir: results/checkpoints/cnn

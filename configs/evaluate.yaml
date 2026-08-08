@@ -1,0 +1,28 @@
+# Phase 7 evaluation config — full comparison + cross-dataset generalization test
+
+models:
+  - name: classical_ml
+    checkpoint: results/checkpoints/classical_ml/best_model.pkl
+  - name: cnn
+    checkpoint: results/checkpoints/cnn/best_model.pt
+  - name: vit_hybrid
+    checkpoint: results/checkpoints/vit/best_model.pt
+
+in_distribution_test:
+  dataset: deepweeds
+  split: test          # the frozen test set from Phase 2 — do not touch before this point
+
+cross_dataset_generalization:
+  dataset: mfwd
+  path: data/mfwd
+  species_overlap_strategy: overlapping_only  # or: open_set — DECIDE this once class lists are in hand
+  zero_shot: true       # no fine-tuning on MFWD
+
+statistics:
+  significance_test: paired_ttest   # or: wilcoxon
+  metrics: [accuracy, f1, precision, recall]
+
+output:
+  comparison_table: results/tables/final_comparison.csv
+  confusion_matrices: results/figures/
+  generalization_table: results/tables/cross_dataset_generalization.csv

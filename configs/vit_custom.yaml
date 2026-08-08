@@ -1,0 +1,44 @@
+# Custom ViT / hybrid CNN-ViT config — Person C
+# Phase 6 of project_execution_algorithm.md
+# NOTE: this must NOT be a default timm.create_model() call with no changes —
+# customize the head, augmentation, or use a hybrid CNN-stem + transformer design
+# (see Cluster 8 papers in literature_assignment_plan.md, e.g. Wei et al. 2025)
+
+model:
+  type: vit_hybrid            # custom hybrid CNN-ViT, or: vit_base_patch16_224
+  pretrained_backbone: true
+  custom_head: true           # TODO: describe your head modification here
+  hyperparameters:
+    learning_rate: null       # search space: [1e-4, 5e-5, 1e-5]
+    batch_size: null          # search space: [16, 32]
+    patch_size: null          # if applicable
+    warmup_epochs: null
+
+data:
+  dataset: deepweeds
+  path: data/deepweeds
+  splits: [0.70, 0.15, 0.15]
+  stratify: true
+  random_seed: 42
+  image_size: 224
+  augmentation:
+    horizontal_flip: true
+    rotation_degrees: 15
+    color_jitter: true
+    # TODO Phase 6: document any custom augmentation strategy here for the ablation study
+
+training:
+  cv_folds: 5
+  max_epochs: 50
+  early_stopping_patience: 7
+  search_strategy: bayesian_opt
+
+ablation:
+  # Phase 8 — flip these off one at a time and re-run to measure each component's contribution
+  use_custom_head: true
+  use_custom_augmentation: true
+  use_class_weighting: true
+
+output:
+  results_table: results/tables/vit_results.csv
+  checkpoint_dir: results/checkpoints/vit
